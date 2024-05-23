@@ -13,7 +13,7 @@ Created on Fri Oct  8 17:00:05 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import UnivariateSpline
-from scipy.interpolate import Rbf
+from scipy.interpolate import griddata
 
  
 # Using readline() to read one line at a time
@@ -131,17 +131,16 @@ def plot_3d_scatter(pt):
     points = pt 
     points = [point for point in points if point[2] >= 30]
     xs, ys, zs = zip(*points)
-    xs = xs[::30]
-    ys = ys[::30]
-    zs = zs[::30]
+    xs = xs[::15]
+    ys = ys[::15]
+    zs = zs[::15]
     
     #sc = ax.scatter(xs[::15], ys[::15], zs[::15], c = zs[::15], cmap='jet', marker='o')
     x, y = np.meshgrid(xs, ys)
-    print(len(x) == len(y) == len(zs))
-    rbf = Rbf(x, y, zs, function="quintic") 
-    Z_pred = rbf(x, y) 
-    #ax.plot_surface(xs, ys, zs) 
-    ax.plot_surface(x, y, Z_pred) 
+    zi = griddata((xs, ys), zs, (x, y), method='linear')
+    ax.contourf3D(xs, ys, zi, 25, cmap='jet')
+    ax.view_init(elev=30, azim=135, roll=0)
+    
     plt.show()
     #plt.colorbar(sc)
     ax.set_zlim(120,250)
