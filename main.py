@@ -13,7 +13,7 @@ Created on Fri Oct  8 17:00:05 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import UnivariateSpline
-from mpl_toolkits.mplot3d import Axes3D
+from scipy.interpolate import Rbf
 
  
 # Using readline() to read one line at a time
@@ -105,7 +105,7 @@ def CreateTimeSeriesAnimation(Animate, Condense):
             spl.set_smoothing_factor(1000)
             #spl.set_smoothing_factor(2000)
             listSpl = spl(xs).tolist()
-            
+                
             #Establish peaks and dips 
             minimas.append(xs[listSpl.index(min(listSpl))])
             maximas.append(xs[listSpl.index(max(listSpl))])
@@ -131,19 +131,32 @@ def plot_3d_scatter(pt):
     points = pt 
     points = [point for point in points if point[2] >= 30]
     xs, ys, zs = zip(*points)
-    sc = ax.scatter(xs[::3], ys[::3], zs[::3], c = zs[::3], cmap='jet', marker='o')
-    plt.colorbar(sc)
+    xs = xs[::30]
+    ys = ys[::30]
+    zs = zs[::30]
+    
+    #sc = ax.scatter(xs[::15], ys[::15], zs[::15], c = zs[::15], cmap='jet', marker='o')
+    x, y = np.meshgrid(xs, ys)
+    print(len(x) == len(y) == len(zs))
+    rbf = Rbf(x, y, zs, function="quintic") 
+    Z_pred = rbf(x, y) 
+    #ax.plot_surface(xs, ys, zs) 
+    ax.plot_surface(x, y, Z_pred) 
+    plt.show()
+    #plt.colorbar(sc)
     ax.set_zlim(120,250)
     plt.show()
 
 
 #Needed to create data for timeseries,  1st param determines if animation is created 
 CreateMapAnimation(False)
+plot_3d_scatter(pointsList[0])
+#plot_3d_scatter(pointsList[1])
 CreateTimeSeriesAnimation(False, False)
 print(np.median(maximas))
 print(np.median(minimas))
-#plot_3d_scatter(pointsList[0])
-#plot_3d_scatter(pointsList[1])
+
+
 
 
 
