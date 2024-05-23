@@ -1,14 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Oct  8 17:00:05 2021
-
-@author: Per
-
-"""
-
-
-### Good reading about how to read files line by line
-# https://www.geeksforgeeks.org/read-a-file-line-by-line-in-python/
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,7 +22,7 @@ C = np.zeros((200,200,Index2-Index1))
 
 minimas = []
 maximas = []
-
+fig, ax = plt.subplots()
 def ImageAnalysis(Animate, count, ax): 
     # Get next line from file
     line = "./wa/" + file1.readline()
@@ -51,7 +40,7 @@ def ImageAnalysis(Animate, count, ax):
         pointsList.append(pts)
     
     if Animate: 
-        fig, ax = plt.subplots()
+        
         pos = ax.imshow(A,vmin=120,vmax=250,cmap="jet")
         cb = plt.colorbar(pos)
         
@@ -148,10 +137,18 @@ def plot_3d_scatter(pt):
 
 
 #Needed to create data for timeseries,  1st param determines if animation is created 
+
+#Set arg to True for a animation of bitmap + vegetation index
 CreateMapAnimation(False)
-plot_3d_scatter(pointsList[0])
+
+#Long processing time, uncomment each one individually, gets contour maps of season start/end
+#plot_3d_scatter(pointsList[0])
 #plot_3d_scatter(pointsList[1])
+
+#Set 1st arg to True for Time Series Animation, 2nd arg to True for time series overlay
 CreateTimeSeriesAnimation(False, False)
+
+#prints results, applied after running first time to _low and _high.
 print(np.median(maximas))
 print(np.median(minimas))
 
